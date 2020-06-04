@@ -22,34 +22,39 @@ import java.util.Locale;
 
 public class WareFormRecyclerView extends RecyclerView {
 
+    private final WareFormAdapter mAdapter;
     public int paddingleft = 0;                    // 刻度的起始坐标(像素)
-    public float density = 1;              // 手机屏幕密度
     public float secondPreDp = 0.05f;      // 一个dp多少秒
-
     public int drawcolor = 0xff333333;     // 刻度颜色
     public int fontSize = 36;              // 刻度字体大小
     public int shortTerm = 30;             // 1秒钟刻度线长度(像素)
     public int middleTerm = 40;            // 5秒钟刻度线长度(像素)
     public int longTerm  = 50;             // 10秒钟刻度线长度(像素)
-
+    private float density = 1;              // 手机屏幕密度
+    private int[] mDataset;
     private LinearLayoutManager layoutManager;
-
     private SimpleDateFormat formatter;
     private Date date;
-
     private Paint paint;
     private TextPaint textPaint;
     private Rect rect;
 
 
-    public WareFormRecyclerView(@NonNull Context context) {
-        super(context);
-    }
+    public WareFormRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int[]dataset,int density) {
 
-    public WareFormRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+
+        mDataset = dataset;
+        this.density = density;
+
         setWillNotDraw(false);
         setHasFixedSize(true);
+
+
+        // 设置adapter
+        mAdapter = new WareFormAdapter(dataset,density);
+        mAdapter.headWidth = 100;
+        setAdapter(mAdapter);
 
 
         // 设置横向布局
@@ -71,13 +76,16 @@ public class WareFormRecyclerView extends RecyclerView {
 
     }
 
+    public void setmDataset(int[] mDataset) {
+        this.mDataset = mDataset;
+    }
+
     @Override
     public void onDraw(Canvas c) {
         super.onDraw(c);
 
         // 显示刻度
         int scrollOffsetX= computeHorizontalScrollOffset();
-
 
         // 用来计算刻度开始的时间
         int startx = Math.max(scrollOffsetX - paddingleft,0);
@@ -100,7 +108,6 @@ public class WareFormRecyclerView extends RecyclerView {
                 // 显示时间
                 textPaint.getTextBounds(dateString, 0, dateString.length(), rect);
                 c.drawText(dateString + "", x-rect.width()/2, getMeasuredHeight()-70, textPaint);
-
             }
 
             // 5秒位置

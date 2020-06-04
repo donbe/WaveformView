@@ -1,14 +1,23 @@
 package com.example.myapplication;
 
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import static android.view.View.OVER_SCROLL_NEVER;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,16 +26,13 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        recyclerView = (WareFormRecyclerView) findViewById(R.id.my_recycler_view);
-        recyclerView.density = getDensity();
-        recyclerView.paddingleft = 100;
 
 
         int length = 3000;
@@ -38,10 +44,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        // 设置adapter
-        mAdapter = new WareFormAdapter(mydata,getDensity());
-        mAdapter.headWidth = 100;
-        recyclerView.setAdapter(mAdapter);
+        ConstraintLayout layout = findViewById(R.id.content_main);
+
+        recyclerView = new WareFormRecyclerView(this,null,mydata, (int) getDensity());;
+        recyclerView.paddingleft = 100;
+        recyclerView.setId(View.generateViewId());
+        recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
+        layout.addView(recyclerView);
+
+        // 设置约束
+        ConstraintSet set = new ConstraintSet();
+        set.clone(layout);
+        set.connect(recyclerView.getId(), ConstraintSet.TOP, layout.getId(), ConstraintSet.TOP, 500);
+        set.constrainHeight(recyclerView.getId(),350);
+        set.applyTo(layout);
+
+
+
+
+
+
 
     }
 
