@@ -35,10 +35,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        int length = 2000;
+        int length = 500;
         int[] mydata = new int[length];
         for (int i=0; i<length;i++){
-            int max=100,min=1;
+            int max=50,min=1;
             int ran2 = (int) (Math.random() * (max-min) + min);
             mydata[i] = ran2;
         }
