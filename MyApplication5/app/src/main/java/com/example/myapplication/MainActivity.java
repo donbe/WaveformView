@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-        int length = 3000;
+        int length = 2000;
         int[] mydata = new int[length];
         for (int i=0; i<length;i++){
             int max=100,min=1;
@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         ConstraintLayout layout = findViewById(R.id.content_main);
 
         recyclerView = new WareFormRecyclerView(this,null,mydata, (int) getDensity());;
-        recyclerView.paddingleft = 500;
         recyclerView.setId(View.generateViewId());
         recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
         layout.addView(recyclerView);
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         ConstraintSet set = new ConstraintSet();
         set.clone(layout);
         set.connect(recyclerView.getId(), ConstraintSet.TOP, layout.getId(), ConstraintSet.TOP, 500);
-        set.constrainHeight(recyclerView.getId(),280);
+        set.constrainHeight(recyclerView.getId(),200);
         set.applyTo(layout);
 
 

@@ -14,9 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class WareFormAdapter extends RecyclerView.Adapter<WareFormAdapter.WaveformViewHolder> {
 
     private final Context mContext;
-    public int headWidth = 0;
 
-    public int color = 0xff00ff00;
     private int[] mDataset;
     private float mDensity;
 
@@ -49,7 +47,7 @@ public class WareFormAdapter extends RecyclerView.Adapter<WareFormAdapter.Wavefo
 
         // 设置宽度
         ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
-        params.width = (int) Math.max(width,mDensity * mDataset.length + headWidth) ;
+        params.width = (int) (width + mDensity * mDataset.length) ;
         holder.itemView.setLayoutParams(params);
 
     }
