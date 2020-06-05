@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -21,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+@SuppressLint("ViewConstructor")
 public class WareFormRecyclerView extends RecyclerView {
 
     public float mSecondPreDp = 0.05f;      // 一个dp多少秒
