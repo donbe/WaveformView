@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         ConstraintLayout layout = findViewById(R.id.content_main);
 
         recyclerView = new WareFormRecyclerView(this,null,mydata, (int) getDensity());;
-        recyclerView.paddingleft = 100;
+        recyclerView.paddingleft = 500;
         recyclerView.setId(View.generateViewId());
         recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
         layout.addView(recyclerView);
@@ -56,13 +56,8 @@ public class MainActivity extends AppCompatActivity {
         ConstraintSet set = new ConstraintSet();
         set.clone(layout);
         set.connect(recyclerView.getId(), ConstraintSet.TOP, layout.getId(), ConstraintSet.TOP, 500);
-        set.constrainHeight(recyclerView.getId(),350);
+        set.constrainHeight(recyclerView.getId(),280);
         set.applyTo(layout);
-
-
-
-
-
 
 
     }

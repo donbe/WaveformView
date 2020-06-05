@@ -1,5 +1,8 @@
 package com.example.myapplication;
 
+import android.app.Activity;
+import android.content.Context;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class WareFormAdapter extends RecyclerView.Adapter<WareFormAdapter.WaveformViewHolder> {
 
+    private final Context mContext;
     public int headWidth = 0;
 
     public int color = 0xff00ff00;
     private int[] mDataset;
     private float mDensity;
-    WareFormAdapter(int[] myDataset, float density) {
+
+    WareFormAdapter(Context context, int[] myDataset, float density) {
+
+        mContext = context;
         mDataset = myDataset;
         mDensity = density;
     }
@@ -24,46 +31,40 @@ public class WareFormAdapter extends RecyclerView.Adapter<WareFormAdapter.Wavefo
     @Override
     public WaveformViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            RelativeLayout v = (RelativeLayout) inflater.inflate(R.layout.wave_item, parent, false);
-            return new WaveformViewHolder(v);
+        View v = new View(mContext);
+        RecyclerView.LayoutParams layoutParams=new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT,
+                RecyclerView.LayoutParams.WRAP_CONTENT);
+        v.setLayoutParams(layoutParams);
+
+        return new WaveformViewHolder(v);
 
     }
 
     @Override
     public void onBindViewHolder(WaveformViewHolder holder, int position) {
 
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
 
-            // 设置宽度为一个dp
-            ViewGroup.LayoutParams params = holder.layout.getLayoutParams();
-            params.width = (int) mDensity;
-            holder.layout.setLayoutParams(params);
-
-            // 设置高度
-            ViewGroup.LayoutParams itemParams  = holder.item.getLayoutParams();
-            itemParams.height = mDataset[position];
-            holder.item.setLayoutParams(itemParams);
-
-            // 设置颜色
-            holder.item.setBackgroundColor(color);
-
+        // 设置宽度
+        ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
+        params.width = (int) Math.max(width,mDensity * mDataset.length + headWidth) ;
+        holder.itemView.setLayoutParams(params);
 
     }
 
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return 1;
     }
 
 
     static class WaveformViewHolder extends RecyclerView.ViewHolder {
-        RelativeLayout layout;
-        View item;
 
-        WaveformViewHolder(RelativeLayout v) {
+        WaveformViewHolder(View v) {
             super(v);
-            layout = v;
-            item = v.findViewById(R.id.item);
+
         }
     }
 

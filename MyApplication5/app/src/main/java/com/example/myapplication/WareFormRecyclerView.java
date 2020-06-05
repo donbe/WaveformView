@@ -30,7 +30,7 @@ public class WareFormRecyclerView extends RecyclerView {
     public int shortTerm = 30;             // 1秒钟刻度线长度(像素)
     public int middleTerm = 40;            // 5秒钟刻度线长度(像素)
     public int longTerm  = 50;             // 10秒钟刻度线长度(像素)
-    private float density = 1;              // 手机屏幕密度
+    private float density = 1;             // 手机屏幕密度
     private int[] mDataset;
     private LinearLayoutManager layoutManager;
     private SimpleDateFormat formatter;
@@ -40,7 +40,7 @@ public class WareFormRecyclerView extends RecyclerView {
     private Rect rect;
 
 
-    public WareFormRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int[]dataset,int density) {
+    public WareFormRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int[]dataset, int density) {
 
         super(context, attrs);
 
@@ -52,7 +52,7 @@ public class WareFormRecyclerView extends RecyclerView {
 
 
         // 设置adapter
-        mAdapter = new WareFormAdapter(dataset,density);
+        mAdapter = new WareFormAdapter(context,dataset,density);
         mAdapter.headWidth = 100;
         setAdapter(mAdapter);
 
@@ -95,7 +95,8 @@ public class WareFormRecyclerView extends RecyclerView {
 
         for (int i = (int) Math.max(startx / density - 20,0); i <= ( startx + getMeasuredWidth()) / density; i++){
 
-            int x = (int) (i * density - startx + paddingx);
+            // 刻度x坐标
+            int x = (int) ((i-1) * density - startx + paddingx);
 
             // 10秒位置
             if ((secondPreDp*100*i) % 1000 == 0){
@@ -120,6 +121,15 @@ public class WareFormRecyclerView extends RecyclerView {
             else if ((secondPreDp*100*i) % 100 == 0){
                 rect.set(x,getMeasuredHeight()-shortTerm, (int) (x+ density),getMeasuredHeight());
                 c.drawRect(rect,paint);
+            }
+
+
+            // 画波形图
+            // 波形线x坐标,差了一个pd
+            if (i < mDataset.length) {
+                int wavex = (int) ((i) * density - startx + paddingx);
+                rect.set(wavex, 100 -mDataset[i] /2 , (int) (wavex + density), 100 + mDataset[i] /2);
+                c.drawRect(rect, paint);
             }
         }
     }
