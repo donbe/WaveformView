@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import static android.view.View.OVER_SCROLL_NEVER;
@@ -33,8 +34,8 @@ public class MainActivity extends AppCompatActivity implements WareFormRecyclerV
         setSupportActionBar(toolbar);
 
 
-        int length = 500;
-        int[] mydata = new int[length];
+        int length = 50;
+        final int[] mydata = new int[length];
         for (int i=0; i<length;i++){
             int max=50,min=1;
             int ran2 = (int) (Math.random() * (max-min) + min);
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements WareFormRecyclerV
 
         ConstraintLayout layout = findViewById(R.id.content_main);
 
-        recyclerView = new WareFormRecyclerView(this,null,mydata);
+        recyclerView = new WareFormRecyclerView(this,null,null);
         recyclerView.setId(View.generateViewId());
         recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
         recyclerView.listener = this;
@@ -57,6 +58,16 @@ public class MainActivity extends AppCompatActivity implements WareFormRecyclerV
         set.connect(recyclerView.getId(), ConstraintSet.TOP, layout.getId(), ConstraintSet.TOP, 500);
         set.constrainHeight(recyclerView.getId(),200);
         set.applyTo(layout);
+
+
+        Button btn = findViewById(R.id.button2);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.setmDataset(mydata);
+                recyclerView.invalidate();
+            }
+        });
     }
 
     @Override

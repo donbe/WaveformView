@@ -27,47 +27,35 @@ import java.util.Locale;
 @SuppressLint("ViewConstructor")
 public class WareFormRecyclerView extends RecyclerView {
 
-    private Context mContext;
-
+    private final WareFormAdapter mAdapter;
+    private final LinearLayoutManager mLayoutManager;
     public int mMScondPreDp = 50;      // 一个dp多少毫秒
-
     public int mPaddingleft = 0;                    // 刻度的起始坐标(像素)
     public int mDrawcolor = 0xff3D4057;     // 刻度颜色
     public int mFontSize = 30;              // 刻度字体大小
     public int mShortTerm = 15;             // 1秒钟刻度线长度(像素)
     public int mMiddleTerm = 22;            // 5秒钟刻度线长度(像素)
     public int mLongTerm = 28;             // 10秒钟刻度线长度(像素)
-
     public int mLinecolor = 0xff779FD7;         // 波形图线的颜色
-
     public int mCentLinecolor = 0xffffffff;     // 中线颜色
     public int mRadius = 8;                //中线顶部底部的圆球半径
-
     public int mTopLineHeight = 1;             // 顶部，底部的线的高度（DP）
     public int mTopLinecolor = 0xff63647C;     // 顶部和底部线颜色
-
     public int mGradientStartColor = 0x00171C35;     // 渐变的起始颜色
     public int mGradientEndColor = 0x332AAEF3;       // 渐变的结束颜色
-
-
-    public int[] mDataset = {};                      //波形图数据
-
     public WareFormRecyclerViewListener listener ; //滚动监听
-
     // 时间格式
     public SimpleDateFormat mFormatter = new SimpleDateFormat("mm:ss", Locale.CHINA);
+    private Context mContext;
+    private int[] mDataset = {};                      //波形图数据
     private int mDensity;             // 手机屏幕密度;
     private Date mDate = new Date();
-
     // 笔触
     private Paint mPaint = new Paint();
-    private TextPaint mTextPaint = new TextPaint();;
+    private TextPaint mTextPaint = new TextPaint();
     private Paint mGradientPaint = new Paint();
-
     private Rect mRect = new Rect();
-
     private int mCurrentScrollOffsetx; // 当前毫秒数
-
 
     public WareFormRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int[]dataset) {
 
@@ -80,12 +68,12 @@ public class WareFormRecyclerView extends RecyclerView {
         setWillNotDraw(false);
 
         // 设置adapter
-        WareFormAdapter mAdapter = new WareFormAdapter(context, mDataset.length * mDensity);
+         mAdapter = new WareFormAdapter(context, mDataset.length * mDensity);
         setAdapter(mAdapter);
 
         // 设置横向布局
-        LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
-        setLayoutManager(layoutManager);
+        mLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        setLayoutManager(mLayoutManager);
 
         // 设置默认左侧距离为屏幕中间
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -103,6 +91,38 @@ public class WareFormRecyclerView extends RecyclerView {
         mTextPaint.setAntiAlias(true);
 
 
+        // 监听数据变动
+        mAdapter.registerAdapterDataObserver(new AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+
+                // 移动到底部
+                mLayoutManager.scrollToPositionWithOffset(0,-mDataset.length * mDensity);
+            }
+        });
+    }
+
+    public int[] getmDataset() {
+        return mDataset;
+    }
+
+    /*
+    * 改变数据后，会发生以下几件事情
+    * 1 重新ondraw
+    * 2 recycler reloaddata
+    * 3 滚动recyclerview到底部
+    * */
+    public void setmDataset(int[] mDataset) {
+
+        this.mDataset = mDataset;
+
+        // 重新绘制波形图
+        this.invalidate();
+
+        // 刷新recycleview
+        mAdapter.mDataWidth = mDataset.length * mDensity;
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -288,7 +308,7 @@ public class WareFormRecyclerView extends RecyclerView {
 
         private final Context mContext;
 
-        private int mDataWidth;         // 数据区域展示的宽度(像素)
+        public int mDataWidth;         // 数据区域展示的宽度(像素)
 
         WareFormAdapter(Context context, int dataWidth) {
             mContext = context;
