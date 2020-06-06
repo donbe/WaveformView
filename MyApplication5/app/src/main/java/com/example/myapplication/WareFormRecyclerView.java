@@ -11,6 +11,8 @@ import android.graphics.Shader;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.ViewGroup;
 
 
 import androidx.annotation.NonNull;
@@ -25,31 +27,47 @@ import java.util.Locale;
 @SuppressLint("ViewConstructor")
 public class WareFormRecyclerView extends RecyclerView {
 
+    private Context mContext;
+
     public int mMScondPreDp = 50;      // 一个dp多少毫秒
+
+    public int mPaddingleft = 0;                    // 刻度的起始坐标(像素)
     public int mDrawcolor = 0xff3D4057;     // 刻度颜色
-    public int mLinecolor = 0xff779FD7;     // 波形图线的颜色
-    public int mTopLinecolor = 0xff63647C;     // 顶部和底部线颜色
-    public int mCentLinecolor = 0xffffffff;     // 中线
     public int mFontSize = 30;              // 刻度字体大小
     public int mShortTerm = 15;             // 1秒钟刻度线长度(像素)
     public int mMiddleTerm = 22;            // 5秒钟刻度线长度(像素)
     public int mLongTerm = 28;             // 10秒钟刻度线长度(像素)
+
+    public int mLinecolor = 0xff779FD7;         // 波形图线的颜色
+
+    public int mCentLinecolor = 0xffffffff;     // 中线颜色
+    public int mRadius = 8;                //中线顶部底部的圆球半径
+
+    public int mTopLineHeight = 1;             // 顶部，底部的线的高度（DP）
+    public int mTopLinecolor = 0xff63647C;     // 顶部和底部线颜色
+
     public int mGradientStartColor = 0x00171C35;     // 渐变的起始颜色
     public int mGradientEndColor = 0x332AAEF3;       // 渐变的结束颜色
-    public int mTopLineHeight = 1;                   // 顶部，底部的线的高度（DP）
-    public int mPaddingleft = 0;                    // 刻度的起始坐标(像素)
-    public int[] mDataset;
-    public WareFormRecyclerViewListener listener ;
-    private int mDensity = 1;             // 手机屏幕密度
-    private int mRadius = 8;
-    private SimpleDateFormat mFormatter;
-    private Date mDate;
-    private Paint mPaint;
-    private TextPaint mTextPaint;
-    private Paint mGradientPaint;
-    private Rect mRect;
-    private int mCurrentScrollOffsetx;
-    private Context mContext;
+
+
+    public int[] mDataset;                      //波形图数据
+
+    public WareFormRecyclerViewListener listener ; //滚动监听
+
+    // 时间格式
+    public SimpleDateFormat mFormatter = new SimpleDateFormat("mm:ss", Locale.CHINA);
+    private int mDensity;             // 手机屏幕密度;
+    private Date mDate = new Date();
+
+    // 笔触
+    private Paint mPaint = new Paint();
+    private TextPaint mTextPaint = new TextPaint();;
+    private Paint mGradientPaint = new Paint();
+
+    private Rect mRect = new Rect();
+
+    private int mCurrentScrollOffsetx; // 当前毫秒数
+
 
     public WareFormRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int[]dataset) {
 
@@ -76,21 +94,14 @@ public class WareFormRecyclerView extends RecyclerView {
         mPaddingleft = width/2;
 
         // 初始化变量
-        mPaint = new Paint();
         mPaint.setColor(mDrawcolor);
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setAntiAlias(true);
 
-        mTextPaint = new TextPaint();
         mTextPaint.setColor(mDrawcolor);
         mTextPaint.setTextSize(mFontSize);
         mTextPaint.setAntiAlias(true);
 
-        mGradientPaint = new Paint();
-
-        mRect = new Rect();
-        mFormatter = new SimpleDateFormat("mm:ss", Locale.CHINA);
-        mDate = new Date();
 
     }
 
@@ -253,6 +264,14 @@ public class WareFormRecyclerView extends RecyclerView {
         }
     }
 
+    /*获取屏幕密度*/
+    private int getDensity() {
+        DisplayMetrics dm = new DisplayMetrics();
+        ((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        return (int) dm.density;
+    }
+
+    /*滚动监听*/
     interface WareFormRecyclerViewListener  {
 
         /*
@@ -265,9 +284,59 @@ public class WareFormRecyclerView extends RecyclerView {
 
     }
 
-    private int getDensity() {
-        DisplayMetrics dm = new DisplayMetrics();
-        ((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
-        return (int) dm.density;
+    public static class WareFormAdapter extends Adapter<WareFormAdapter.WaveformViewHolder> {
+
+        private final Context mContext;
+
+        private int mDataWidth;         // 数据区域展示的宽度(像素)
+
+        WareFormAdapter(Context context, int dataWidth) {
+            mContext = context;
+            mDataWidth = dataWidth;
+        }
+
+        @NonNull
+        @Override
+        public WaveformViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+            View v = new View(mContext);
+            LayoutParams layoutParams=new LayoutParams(LayoutParams.WRAP_CONTENT,
+                    LayoutParams.WRAP_CONTENT);
+            v.setLayoutParams(layoutParams);
+
+            return new WaveformViewHolder(v);
+
+        }
+
+        @Override
+        public void onBindViewHolder(WaveformViewHolder holder, int position) {
+
+            // 获取屏幕宽度
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            ((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int width = displayMetrics.widthPixels;
+
+            // 设置cell的宽度
+            ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
+            params.width = (int) (width + mDataWidth) ;
+            holder.itemView.setLayoutParams(params);
+
+        }
+
+        @Override
+        public int getItemCount() {
+            // 只有一个cell就够了
+            return 1;
+        }
+
+
+        static class WaveformViewHolder extends ViewHolder {
+
+            WaveformViewHolder(View v) {
+                super(v);
+
+            }
+        }
+
     }
 }

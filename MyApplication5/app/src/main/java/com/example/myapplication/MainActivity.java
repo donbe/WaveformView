@@ -3,21 +3,16 @@ package com.example.myapplication;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
 
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import static android.view.View.OVER_SCROLL_NEVER;
@@ -25,7 +20,7 @@ import static android.view.View.OVER_SCROLL_NEVER;
 public class MainActivity extends AppCompatActivity implements WareFormRecyclerView.WareFormRecyclerViewListener {
 
     private WareFormRecyclerView recyclerView;
-    private WareFormAdapter mAdapter;
+    private WareFormRecyclerView.WareFormAdapter mAdapter;
 
 
 
