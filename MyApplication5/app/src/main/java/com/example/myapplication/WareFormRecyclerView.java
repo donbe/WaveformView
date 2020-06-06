@@ -50,7 +50,7 @@ public class WareFormRecyclerView extends RecyclerView {
     public int mGradientEndColor = 0x332AAEF3;       // 渐变的结束颜色
 
 
-    public int[] mDataset;                      //波形图数据
+    public int[] mDataset = {};                      //波形图数据
 
     public WareFormRecyclerViewListener listener ; //滚动监听
 
@@ -74,13 +74,13 @@ public class WareFormRecyclerView extends RecyclerView {
         super(context, attrs);
 
         mContext = context;
-        mDataset = dataset;
+        if (dataset != null) mDataset = dataset;
         mDensity = getDensity();
 
         setWillNotDraw(false);
 
         // 设置adapter
-        WareFormAdapter mAdapter = new WareFormAdapter(context, dataset.length * mDensity);
+        WareFormAdapter mAdapter = new WareFormAdapter(context, mDataset.length * mDensity);
         setAdapter(mAdapter);
 
         // 设置横向布局
