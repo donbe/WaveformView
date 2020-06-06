@@ -22,7 +22,7 @@ import android.widget.ImageView;
 
 import static android.view.View.OVER_SCROLL_NEVER;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements WareFormRecyclerView.WareFormRecyclerViewListener {
 
     private WareFormRecyclerView recyclerView;
     private WareFormAdapter mAdapter;
@@ -49,20 +49,11 @@ public class MainActivity extends AppCompatActivity {
 
         ConstraintLayout layout = findViewById(R.id.content_main);
 
-        recyclerView = new WareFormRecyclerView(this,null,mydata, (int) getDensity());;
+        recyclerView = new WareFormRecyclerView(this,null,mydata);
         recyclerView.setId(View.generateViewId());
         recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
-        recyclerView.addOnScrollListener(new OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
+        recyclerView.listener = this;
 
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-            }
-        });
         layout.addView(recyclerView);
 
         // 设置约束
@@ -71,8 +62,6 @@ public class MainActivity extends AppCompatActivity {
         set.connect(recyclerView.getId(), ConstraintSet.TOP, layout.getId(), ConstraintSet.TOP, 500);
         set.constrainHeight(recyclerView.getId(),200);
         set.applyTo(layout);
-
-
     }
 
     @Override
@@ -97,12 +86,22 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private float getDensity() {
-        DisplayMetrics dm = new DisplayMetrics();
-        this.getWindowManager().getDefaultDisplay().getMetrics(dm);
-        return dm.density;
+
+
+
+    @Override
+    public void onScrolled(int dx, int millisecond) {
+        ImageView v = findViewById(R.id.imageView);
+
+
+        // 设置约束
+        ConstraintLayout layout = findViewById(R.id.content_main);
+
+        ConstraintSet set = new ConstraintSet();
+        set.clone(layout);
+        set.connect(v.getId(), ConstraintSet.LEFT, layout.getId(), ConstraintSet.LEFT, dx);
+        set.applyTo(layout);
+
+        Log.d("donbe", "onScrolled: "+ dx);
     }
-
-
-
 }

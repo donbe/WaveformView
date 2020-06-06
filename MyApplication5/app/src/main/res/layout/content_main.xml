@@ -12,14 +12,11 @@
     >
 
 
-<!--    <com.example.myapplication.WareFormRecyclerView-->
-<!--        android:id="@+id/my_recycler_view"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="100dp"-->
-<!--        android:layout_marginTop="257dp"-->
-<!--        android:overScrollMode="never"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent">-->
-<!--    </com.example.myapplication.WareFormRecyclerView>-->
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:srcCompat="@drawable/ic_launcher_background" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

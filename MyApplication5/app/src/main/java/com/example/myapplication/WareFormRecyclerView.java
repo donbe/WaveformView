@@ -25,7 +25,7 @@ import java.util.Locale;
 @SuppressLint("ViewConstructor")
 public class WareFormRecyclerView extends RecyclerView {
 
-    public float mSecondPreDp = 0.05f;      // 一个dp多少秒
+    public int mMScondPreDp = 50;      // 一个dp多少毫秒
     public int mDrawcolor = 0xff3D4057;     // 刻度颜色
     public int mLinecolor = 0xff779FD7;     // 波形图线的颜色
     public int mTopLinecolor = 0xff63647C;     // 顶部和底部线颜色
@@ -39,7 +39,8 @@ public class WareFormRecyclerView extends RecyclerView {
     public int mTopLineHeight = 1;                   // 顶部，底部的线的高度（DP）
     public int mPaddingleft = 0;                    // 刻度的起始坐标(像素)
     public int[] mDataset;
-    private float mDensity = 1;             // 手机屏幕密度
+    public WareFormRecyclerViewListener listener ;
+    private int mDensity = 1;             // 手机屏幕密度
     private int mRadius = 8;
     private SimpleDateFormat mFormatter;
     private Date mDate;
@@ -47,19 +48,21 @@ public class WareFormRecyclerView extends RecyclerView {
     private TextPaint mTextPaint;
     private Paint mGradientPaint;
     private Rect mRect;
+    private int mCurrentScrollOffsetx;
+    private Context mContext;
 
-
-    public WareFormRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int[]dataset, int density) {
+    public WareFormRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int[]dataset) {
 
         super(context, attrs);
 
+        mContext = context;
         mDataset = dataset;
-        this.mDensity = density;
+        mDensity = getDensity();
 
         setWillNotDraw(false);
 
         // 设置adapter
-        WareFormAdapter mAdapter = new WareFormAdapter(context, dataset.length * density);
+        WareFormAdapter mAdapter = new WareFormAdapter(context, dataset.length * mDensity);
         setAdapter(mAdapter);
 
         // 设置横向布局
@@ -124,6 +127,20 @@ public class WareFormRecyclerView extends RecyclerView {
 
         // 中间线
         drawMiddleLine(c);
+
+
+        if (mCurrentScrollOffsetx != scrollOffsetX){
+            mCurrentScrollOffsetx = scrollOffsetX;
+
+            // 回调
+            if (listener != null ) listener.onScrolled(scrollOffsetX, getCurrentTime());
+        }
+    }
+
+    /*获取当前的毫秒数*/
+    public int getCurrentTime(){
+        int scrollOffsetX= computeHorizontalScrollOffset();
+        return (int) (Math.ceil(scrollOffsetX/3.0)* mMScondPreDp);
     }
 
     /*画渐变覆盖层*/
@@ -193,7 +210,7 @@ public class WareFormRecyclerView extends RecyclerView {
         int x = (int) ((i-1) * mDensity - startx + paddingx);
 
         // 10秒位置
-        if ((mSecondPreDp *100*i) % 1000 == 0){
+        if ((mMScondPreDp*i) % 10000 == 0){
 
             // 画刻度
             mRect.set(x,getMeasuredHeight()- mLongTerm - 2* mRadius, (int) (x+ mDensity),getMeasuredHeight()- 2* mRadius);
@@ -202,13 +219,13 @@ public class WareFormRecyclerView extends RecyclerView {
         }
 
         // 5秒位置
-        else if ((mSecondPreDp *100*i) % 500 == 0){
+        else if ((mMScondPreDp*i) % 5000 == 0){
             mRect.set(x,getMeasuredHeight()- mMiddleTerm - 2* mRadius, (int) (x+ mDensity),getMeasuredHeight()- 2* mRadius);
             c.drawRect(mRect, mPaint);
         }
 
         // 1秒位置
-        else if ((mSecondPreDp *100*i) % 100 == 0){
+        else if ((mMScondPreDp*i) % 1000 == 0){
             mRect.set(x,getMeasuredHeight()- mShortTerm - 2* mRadius, (int) (x+ mDensity),getMeasuredHeight()- 2* mRadius);
             c.drawRect(mRect, mPaint);
         }
@@ -224,16 +241,33 @@ public class WareFormRecyclerView extends RecyclerView {
         int x = (int) ((i-1) * mDensity - startx + paddingx);
 
         // 10秒位置
-        if ((mSecondPreDp *100*i) % 1000 == 0){
+        if ((mMScondPreDp*i) % 10000 == 0){
 
             // 格式化时间
-            mDate.setTime((long) (mSecondPreDp * i * 1000L));
+            mDate.setTime((long) (mMScondPreDp * i));
             String dateString = mFormatter.format(mDate);
 
             // 画时间
             mTextPaint.getTextBounds(dateString, 0, dateString.length(), mRect);
             c.drawText(dateString + "", x- mRect.width()/2, getMeasuredHeight()-(mFontSize + mLongTerm), mTextPaint);
         }
+    }
 
+    interface WareFormRecyclerViewListener  {
+
+        /*
+        * 滚动时回调
+        *
+        * @param 横向移动的距离（像素）
+        * @param 当前的毫秒数
+        * */
+        public void onScrolled( int dx, int millisecond);
+
+    }
+
+    private int getDensity() {
+        DisplayMetrics dm = new DisplayMetrics();
+        ((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(dm);
+        return (int) dm.density;
     }
 }
