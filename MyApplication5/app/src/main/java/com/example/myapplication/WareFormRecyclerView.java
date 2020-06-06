@@ -272,7 +272,7 @@ public class WareFormRecyclerView extends RecyclerView {
     }
 
     /*滚动监听*/
-    interface WareFormRecyclerViewListener  {
+    public interface WareFormRecyclerViewListener  {
 
         /*
         * 滚动时回调
