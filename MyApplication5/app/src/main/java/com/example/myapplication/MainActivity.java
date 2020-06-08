@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 import static android.view.View.OVER_SCROLL_NEVER;
 
 public class MainActivity extends AppCompatActivity implements WareFormRecyclerView.WareFormRecyclerViewListener {
@@ -35,11 +37,12 @@ public class MainActivity extends AppCompatActivity implements WareFormRecyclerV
 
 
         int length = 100;
-        final int[] mydata = new int[length];
+        final ArrayList<Short> mydata = new ArrayList<Short>();
         for (int i=0; i<length;i++){
-            int max=50,min=1;
-            int ran2 = (int) (Math.random() * (max-min) + min);
-            mydata[i] = ran2;
+            short max=50,min=1;
+            short ran2 = (short) (Math.random() * (max-min) + min);
+
+            mydata.add(ran2);
         }
 
 

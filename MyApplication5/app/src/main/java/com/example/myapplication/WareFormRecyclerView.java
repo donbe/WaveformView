@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -47,7 +48,7 @@ public class WareFormRecyclerView extends RecyclerView {
     // 时间格式
     public SimpleDateFormat mFormatter = new SimpleDateFormat("mm:ss", Locale.CHINA);
     private Context mContext;
-    private int[] mDataset = {};                      //波形图数据，每一个元素对应一个dp
+    private ArrayList<Short> mDataset = new ArrayList<Short>();                      //波形图数据，每一个元素对应一个dp
     private int mDensity;             // 手机屏幕密度;
     private Date mDate = new Date();
     // 笔触
@@ -57,7 +58,7 @@ public class WareFormRecyclerView extends RecyclerView {
     private Rect mRect = new Rect();
     private int mCurrentScrollOffsetx; // 当前毫秒数
 
-    public WareFormRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int[]dataset) {
+    public WareFormRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, ArrayList<Short>dataset) {
 
         super(context, attrs);
 
@@ -68,7 +69,7 @@ public class WareFormRecyclerView extends RecyclerView {
         setWillNotDraw(false);
 
         // 设置adapter
-         mAdapter = new WareFormAdapter(context, mDataset.length * mDensity);
+         mAdapter = new WareFormAdapter(context, mDataset.size() * mDensity);
         setAdapter(mAdapter);
 
         // 设置横向布局
@@ -98,12 +99,12 @@ public class WareFormRecyclerView extends RecyclerView {
                 super.onChanged();
 
                 // 移动到底部
-                mLayoutManager.scrollToPositionWithOffset(0,-mDataset.length * mDensity);
+                mLayoutManager.scrollToPositionWithOffset(0,-mDataset.size() * mDensity);
             }
         });
     }
 
-    public int[] getmDataset() {
+    public ArrayList<Short> getmDataset() {
         return mDataset;
     }
 
@@ -113,7 +114,7 @@ public class WareFormRecyclerView extends RecyclerView {
     * 2 recycler reloaddata
     * 3 滚动recyclerview到底部
     * */
-    public void setmDataset(int[] mDataset) {
+    public void setmDataset(ArrayList<Short> mDataset) {
 
         this.mDataset = mDataset;
 
@@ -121,7 +122,7 @@ public class WareFormRecyclerView extends RecyclerView {
         this.invalidate();
 
         // 刷新recycleview
-        mAdapter.mDataWidth = mDataset.length * mDensity;
+        mAdapter.mDataWidth = mDataset.size() * mDensity;
         mAdapter.notifyDataSetChanged();
     }
 
@@ -195,8 +196,8 @@ public class WareFormRecyclerView extends RecyclerView {
     /*画渐变覆盖层*/
     private void drawGradient(Canvas c, int scrollOffsetX) {
 
-        int x = (int) (mPaddingleft + Math.max(0,mDataset.length * mDensity - (getMeasuredWidth() >> 1)) - scrollOffsetX);
-        int x1 = (int) (mPaddingleft +mDataset.length * mDensity - scrollOffsetX);
+        int x = (int) (mPaddingleft + Math.max(0,mDataset.size() * mDensity - (getMeasuredWidth() >> 1)) - scrollOffsetX);
+        int x1 = (int) (mPaddingleft +mDataset.size() * mDensity - scrollOffsetX);
         int y = (int) (2* mRadius + mTopLineHeight * mDensity);
         int y1 = (int) (getMeasuredHeight()-2* mRadius - mTopLineHeight * mDensity);
 
@@ -242,9 +243,9 @@ public class WareFormRecyclerView extends RecyclerView {
         mPaint.setColor(mLinecolor);
 
         // 波形线x坐标,差了一个pd
-        if (i < mDataset.length) {
+        if (i < mDataset.size()) {
             int wavex = (int) ((i) * mDensity - startx + paddingx);
-            mRect.set(wavex, getMeasuredHeight()/2 -mDataset[i] /2 , (int) (wavex + mDensity), getMeasuredHeight()/2 + mDataset[i] /2);
+            mRect.set(wavex, getMeasuredHeight()/2 - (int)mDataset.get(i) /2 , (int) (wavex + mDensity), getMeasuredHeight()/2 + (int)mDataset.get(i) /2);
             c.drawRect(mRect, mPaint);
         }
     }
