@@ -57,6 +57,7 @@ public class WareFormRecyclerView extends RecyclerView {
     private Paint mGradientPaint = new Paint();
     private Rect mRect = new Rect();
     private int mCurrentScrollOffsetx; // 当前毫秒数
+    private int mOnceOffsetx; // 设置数据的时候，设置的使用一次的变量，因为在不停的setmdataset的时候，computeHorizontalScrollOffset()函数计算始终返回0
 
     public WareFormRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, ArrayList<Short>dataset) {
 
@@ -69,7 +70,7 @@ public class WareFormRecyclerView extends RecyclerView {
         setWillNotDraw(false);
 
         // 设置adapter
-         mAdapter = new WareFormAdapter(context, mDataset.size() * mDensity);
+        mAdapter = new WareFormAdapter(context, mDataset.size() * mDensity);
         setAdapter(mAdapter);
 
         // 设置横向布局
@@ -91,7 +92,6 @@ public class WareFormRecyclerView extends RecyclerView {
         mTextPaint.setTextSize(mFontSize);
         mTextPaint.setAntiAlias(true);
 
-
         // 监听数据变动
         mAdapter.registerAdapterDataObserver(new AdapterDataObserver() {
             @Override
@@ -100,26 +100,31 @@ public class WareFormRecyclerView extends RecyclerView {
 
                 // 移动到底部
                 mLayoutManager.scrollToPositionWithOffset(0,-mDataset.size() * mDensity);
+
+                // 重新绘制波形图
+                WareFormRecyclerView.this.invalidate();
             }
         });
+
     }
+
 
     public ArrayList<Short> getmDataset() {
         return mDataset;
     }
 
     /*
-    * 改变数据后，会发生以下几件事情
-    * 1 重新ondraw
-    * 2 recycler reloaddata
-    * 3 滚动recyclerview到底部
-    * */
+     * 改变数据后，会发生以下几件事情
+     * 1 重新ondraw
+     * 2 recycler reloaddata
+     * 3 滚动recyclerview到底部
+     * */
     public void setmDataset(ArrayList<Short> mDataset) {
 
         this.mDataset = mDataset;
 
-        // 重新绘制波形图
-        this.invalidate();
+        // 计算应该移动多少x周的间距
+        mOnceOffsetx =  mDataset.size() * mDensity;
 
         // 刷新recycleview
         mAdapter.mDataWidth = mDataset.size() * mDensity;
@@ -131,7 +136,6 @@ public class WareFormRecyclerView extends RecyclerView {
 
         int dp = millisecond / mMScondPreDp;
         mLayoutManager.scrollToPositionWithOffset(0,-dp * mDensity);
-
     }
 
     /*获取滑动状态*/
@@ -150,6 +154,11 @@ public class WareFormRecyclerView extends RecyclerView {
 
         // 滚动条x平移量
         int scrollOffsetX= computeHorizontalScrollOffset();
+        if (mOnceOffsetx >0) {
+            scrollOffsetX = mOnceOffsetx;
+            mOnceOffsetx = 0;
+        }
+
         // 用来计算刻度开始的时间
         int startx = Math.max(scrollOffsetX - mPaddingleft,0);
         // 刻度开始画的起始坐标
@@ -314,11 +323,11 @@ public class WareFormRecyclerView extends RecyclerView {
     public interface WareFormRecyclerViewListener  {
 
         /*
-        * 滚动时回调
-        *
-        * @param 横向移动的距离（像素）
-        * @param 当前的毫秒数
-        * */
+         * 滚动时回调
+         *
+         * @param 横向移动的距离（像素）
+         * @param 当前的毫秒数
+         * */
         public void onScrolled( int dx, int millisecond);
 
     }

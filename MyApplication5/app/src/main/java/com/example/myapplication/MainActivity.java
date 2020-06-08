@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements WareFormRecyclerV
             @Override
             public void onClick(View v) {
                 recyclerView.setmDataset(mydata);
-                recyclerView.invalidate();
             }
         });
 
