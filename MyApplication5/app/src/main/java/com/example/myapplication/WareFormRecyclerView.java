@@ -125,6 +125,14 @@ public class WareFormRecyclerView extends RecyclerView {
         mAdapter.notifyDataSetChanged();
     }
 
+    /*设置滚动到某个时间点*/
+    public void scrollToMilliSecond(int millisecond){
+
+        int dp = millisecond / mMScondPreDp;
+        mLayoutManager.scrollToPositionWithOffset(0,-dp * mDensity);
+
+    }
+
     @Override
     public void onDraw(Canvas c) {
         super.onDraw(c);

@@ -68,6 +68,14 @@ public class MainActivity extends AppCompatActivity implements WareFormRecyclerV
                 recyclerView.invalidate();
             }
         });
+
+        Button seekbtn = findViewById(R.id.seek);
+        seekbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerView.scrollToMilliSecond(1000);
+            }
+        });
     }
 
     @Override
