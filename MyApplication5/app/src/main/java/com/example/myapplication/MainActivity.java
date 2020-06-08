@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements WareFormRecyclerV
         setSupportActionBar(toolbar);
 
 
-        int length = 50;
+        int length = 100;
         final int[] mydata = new int[length];
         for (int i=0; i<length;i++){
             int max=50,min=1;

@@ -29,7 +29,7 @@ public class WareFormRecyclerView extends RecyclerView {
 
     private final WareFormAdapter mAdapter;
     private final LinearLayoutManager mLayoutManager;
-    public int mMScondPreDp = 50;      // 一个dp多少毫秒
+    public int mMScondPreDp = 50;      // 一个dp多少毫秒,这个值必须要能被1000整除
     public int mPaddingleft = 0;                    // 刻度的起始坐标(像素)
     public int mDrawcolor = 0xff3D4057;     // 刻度颜色
     public int mFontSize = 30;              // 刻度字体大小
@@ -47,7 +47,7 @@ public class WareFormRecyclerView extends RecyclerView {
     // 时间格式
     public SimpleDateFormat mFormatter = new SimpleDateFormat("mm:ss", Locale.CHINA);
     private Context mContext;
-    private int[] mDataset = {};                      //波形图数据
+    private int[] mDataset = {};                      //波形图数据，每一个元素对应一个dp
     private int mDensity;             // 手机屏幕密度;
     private Date mDate = new Date();
     // 笔触
