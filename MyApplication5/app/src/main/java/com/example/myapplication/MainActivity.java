@@ -76,6 +76,15 @@ public class MainActivity extends AppCompatActivity implements WareFormRecyclerV
                 recyclerView.scrollToMilliSecond(1000);
             }
         });
+
+        Button scrollable = findViewById(R.id.button3);
+        scrollable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                recyclerView.setScrollEnabled(!recyclerView.getScrollEnabled());
+            }
+        });
     }
 
     @Override

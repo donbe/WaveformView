@@ -28,7 +28,7 @@ import java.util.Locale;
 public class WareFormRecyclerView extends RecyclerView {
 
     private final WareFormAdapter mAdapter;
-    private final LinearLayoutManager mLayoutManager;
+    private final WaveformViewLayout mLayoutManager;
     public int mMScondPreDp = 50;      // 一个dp多少毫秒,这个值必须要能被1000整除
     public int mPaddingleft = 0;                    // 刻度的起始坐标(像素)
     public int mDrawcolor = 0xff3D4057;     // 刻度颜色
@@ -72,7 +72,7 @@ public class WareFormRecyclerView extends RecyclerView {
         setAdapter(mAdapter);
 
         // 设置横向布局
-        mLayoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
+        mLayoutManager = new WaveformViewLayout(context, LinearLayoutManager.HORIZONTAL, false);
         setLayoutManager(mLayoutManager);
 
         // 设置默认左侧距离为屏幕中间
@@ -131,6 +131,16 @@ public class WareFormRecyclerView extends RecyclerView {
         int dp = millisecond / mMScondPreDp;
         mLayoutManager.scrollToPositionWithOffset(0,-dp * mDensity);
 
+    }
+
+    /*获取滑动状态*/
+    public boolean getScrollEnabled() {
+        return mLayoutManager.getScrollEnabled();
+    }
+
+    /*设置是否可以滑动*/
+    public void setScrollEnabled(boolean flag) {
+        mLayoutManager.setScrollEnabled(flag);
     }
 
     @Override
@@ -365,6 +375,29 @@ public class WareFormRecyclerView extends RecyclerView {
 
             }
         }
+
+    }
+
+    static class WaveformViewLayout extends LinearLayoutManager{
+        private boolean isScrollEnabled = true;
+
+        WaveformViewLayout(Context context, int orientation, boolean reverseLayout) {
+            super(context, orientation, reverseLayout);
+        }
+
+        boolean getScrollEnabled() {
+            return isScrollEnabled;
+        }
+
+        void setScrollEnabled(boolean flag) {
+            this.isScrollEnabled = flag;
+        }
+
+        @Override
+        public boolean canScrollHorizontally() {
+            return isScrollEnabled && super.canScrollHorizontally();
+        }
+
 
     }
 }
