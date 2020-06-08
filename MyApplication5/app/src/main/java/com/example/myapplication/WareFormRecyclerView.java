@@ -202,6 +202,13 @@ public class WareFormRecyclerView extends RecyclerView {
         return (int) (Math.ceil(scrollOffsetX/3.0)* mMScondPreDp);
     }
 
+    /*获取指针所在位置的样本数*/
+    public int getCurrentSamples(){
+        int scrollOffsetX= computeHorizontalScrollOffset();
+        return (int)Math.ceil(scrollOffsetX/3.0);
+    }
+
+
     /*画渐变覆盖层*/
     private void drawGradient(Canvas c, int scrollOffsetX) {
 
