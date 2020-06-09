@@ -37,10 +37,9 @@ public class MainActivity extends AppCompatActivity implements WaveFormRecyclerV
 
 
         int length = 100;
-        final ArrayList<Short> mydata = new ArrayList<Short>();
+        final ArrayList<Float> mydata = new ArrayList<Float>();
         for (int i=0; i<length;i++){
-            short max=50,min=1;
-            short ran2 = (short) (Math.random() * (max-min) + min);
+            float ran2 = (float) Math.random();
 
             mydata.add(ran2);
         }

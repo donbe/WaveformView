@@ -45,10 +45,12 @@ public class WaveFormRecyclerView extends RecyclerView {
     public int mGradientStartColor = 0x00171C35;     // 渐变的起始颜色
     public int mGradientEndColor = 0x332AAEF3;       // 渐变的结束颜色
     public WareFormRecyclerViewListener listener ; //滚动监听
+    public int mWaveMaxHeight = 50;             // 波形图最高的高度
+
     // 时间格式
     public SimpleDateFormat mFormatter = new SimpleDateFormat("mm:ss", Locale.CHINA);
     private Context mContext;
-    private ArrayList<Short> mDataset = new ArrayList<Short>();                      //波形图数据，每一个元素对应一个dp
+    private ArrayList<Float> mDataset = new ArrayList<Float>();                      //波形图数据，每一个元素对应一个dp
     private int mDensity;             // 手机屏幕密度;
     private Date mDate = new Date();
     // 笔触
@@ -59,7 +61,7 @@ public class WaveFormRecyclerView extends RecyclerView {
     private int mCurrentScrollOffsetx; // 当前毫秒数
     private int mOnceOffsetx; // 设置数据的时候，设置的使用一次的变量，因为在不停的setmdataset的时候，computeHorizontalScrollOffset()函数计算始终返回0
 
-    public WaveFormRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, ArrayList<Short>dataset) {
+    public WaveFormRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, ArrayList<Float>dataset) {
 
         super(context, attrs);
 
@@ -109,7 +111,7 @@ public class WaveFormRecyclerView extends RecyclerView {
     }
 
 
-    public ArrayList<Short> getmDataset() {
+    public ArrayList<Float> getmDataset() {
         return mDataset;
     }
 
@@ -119,7 +121,7 @@ public class WaveFormRecyclerView extends RecyclerView {
      * 2 recycler reloaddata
      * 3 滚动recyclerview到底部
      * */
-    public void setmDataset(ArrayList<Short> mDataset) {
+    public void setmDataset(ArrayList<Float> mDataset) {
 
         this.mDataset = mDataset;
 
@@ -261,7 +263,8 @@ public class WaveFormRecyclerView extends RecyclerView {
         // 波形线x坐标,差了一个pd
         if (i < mDataset.size()) {
             int wavex = (int) ((i) * mDensity - startx + paddingx);
-            mRect.set(wavex, getMeasuredHeight()/2 - (int)mDataset.get(i) /2 , (int) (wavex + mDensity), getMeasuredHeight()/2 + (int)mDataset.get(i) /2);
+            int v = (int) (mDataset.get(i) * mWaveMaxHeight);
+            mRect.set(wavex, getMeasuredHeight()/2 - v /2 , (int) (wavex + mDensity), getMeasuredHeight()/2 + v/2);
             c.drawRect(mRect, mPaint);
         }
     }
