@@ -45,7 +45,7 @@ public class WaveFormRecyclerView extends RecyclerView {
     public int mGradientStartColor = 0x00171C35;     // 渐变的起始颜色
     public int mGradientEndColor = 0x332AAEF3;       // 渐变的结束颜色
     public WareFormRecyclerViewListener listener ; //滚动监听
-    public int mWaveMaxHeight = 50;             // 波形图最高的高度
+    public float mWaveMaxHeight = 0.5f;             // 波形图最高的高度的比例
 
     // 时间格式
     public SimpleDateFormat mFormatter = new SimpleDateFormat("mm:ss", Locale.CHINA);
@@ -263,7 +263,7 @@ public class WaveFormRecyclerView extends RecyclerView {
         // 波形线x坐标,差了一个pd
         if (i < mDataset.size()) {
             int wavex = (int) ((i) * mDensity - startx + paddingx);
-            int v = (int) (mDataset.get(i) * mWaveMaxHeight);
+            int v = (int) (mDataset.get(i) * (getMeasuredHeight() * mWaveMaxHeight));
             mRect.set(wavex, getMeasuredHeight()/2 - v /2 , (int) (wavex + mDensity), getMeasuredHeight()/2 + v/2);
             c.drawRect(mRect, mPaint);
         }
