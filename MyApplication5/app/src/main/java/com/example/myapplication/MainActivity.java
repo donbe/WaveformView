@@ -20,10 +20,10 @@ import java.util.ArrayList;
 
 import static android.view.View.OVER_SCROLL_NEVER;
 
-public class MainActivity extends AppCompatActivity implements WareFormRecyclerView.WareFormRecyclerViewListener {
+public class MainActivity extends AppCompatActivity implements WaveFormRecyclerView.WareFormRecyclerViewListener {
 
-    private WareFormRecyclerView recyclerView;
-    private WareFormRecyclerView.WareFormAdapter mAdapter;
+    private WaveFormRecyclerView recyclerView;
+    private WaveFormRecyclerView.WareFormAdapter mAdapter;
 
 
 
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements WareFormRecyclerV
 
         ConstraintLayout layout = findViewById(R.id.content_main);
 
-        recyclerView = new WareFormRecyclerView(this,null,null);
+        recyclerView = new WaveFormRecyclerView(this,null,null);
         recyclerView.setId(View.generateViewId());
         recyclerView.setOverScrollMode(OVER_SCROLL_NEVER);
         recyclerView.listener = this;

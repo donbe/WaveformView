@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.Locale;
 
 @SuppressLint("ViewConstructor")
-public class WareFormRecyclerView extends RecyclerView {
+public class WaveFormRecyclerView extends RecyclerView {
 
     private final WareFormAdapter mAdapter;
     private final WaveformViewLayout mLayoutManager;
@@ -59,7 +59,7 @@ public class WareFormRecyclerView extends RecyclerView {
     private int mCurrentScrollOffsetx; // 当前毫秒数
     private int mOnceOffsetx; // 设置数据的时候，设置的使用一次的变量，因为在不停的setmdataset的时候，computeHorizontalScrollOffset()函数计算始终返回0
 
-    public WareFormRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, ArrayList<Short>dataset) {
+    public WaveFormRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, ArrayList<Short>dataset) {
 
         super(context, attrs);
 
@@ -102,7 +102,7 @@ public class WareFormRecyclerView extends RecyclerView {
                 mLayoutManager.scrollToPositionWithOffset(0,-mDataset.size() * mDensity);
 
                 // 重新绘制波形图
-                WareFormRecyclerView.this.invalidate();
+                WaveFormRecyclerView.this.invalidate();
             }
         });
 
