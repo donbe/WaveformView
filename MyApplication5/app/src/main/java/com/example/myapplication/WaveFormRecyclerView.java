@@ -137,6 +137,10 @@ public class WaveFormRecyclerView extends RecyclerView {
     public void scrollToMilliSecond(int millisecond){
 
         int dp = millisecond / mMScondPreDp;
+
+        // 计算应该移动多少x周的间距
+        mOnceOffsetx =  dp * mDensity;
+
         mLayoutManager.scrollToPositionWithOffset(0,-dp * mDensity);
     }
 
@@ -194,11 +198,13 @@ public class WaveFormRecyclerView extends RecyclerView {
             mCurrentScrollOffsetx = scrollOffsetX;
 
             // 回调
-            if (listener != null ) listener.onScrolled(scrollOffsetX, getCurrentTime());
+            if (listener != null ) listener.onScrolled(scrollOffsetX, (int) (Math.ceil(scrollOffsetX/3.0)* mMScondPreDp));
         }
     }
 
-    /*获取当前的毫秒数*/
+    /*获取当前的毫秒数
+     * 如果正在播放中或者录制中,这个方法返回会不正确,返回会变成0
+     * */
     public int getCurrentTime(){
         int scrollOffsetX= computeHorizontalScrollOffset();
         return (int) (Math.ceil(scrollOffsetX/3.0)* mMScondPreDp);
