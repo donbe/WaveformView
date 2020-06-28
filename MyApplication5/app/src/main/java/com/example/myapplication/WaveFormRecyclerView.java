@@ -30,6 +30,7 @@ public class WaveFormRecyclerView extends RecyclerView {
 
     private final WareFormAdapter mAdapter;
     private final WaveformViewLayout mLayoutManager;
+    public int mMaxKDSecond = 60;      // 画刻度线的最大秒数
     public int mMScondPreDp = 50;      // 一个dp多少毫秒,这个值必须要能被1000整除
     public int mPaddingleft = 0;                    // 刻度的起始坐标(像素)
     public int mDrawcolor = 0xff3D4057;     // 刻度颜色
@@ -125,7 +126,7 @@ public class WaveFormRecyclerView extends RecyclerView {
 
         this.mDataset = mDataset;
 
-        // 计算应该移动多少x周的间距
+        // 计算应该移动多少x轴的间距
         mOnceOffsetx =  mDataset.size() * mDensity;
 
         // 刷新recycleview
@@ -138,7 +139,7 @@ public class WaveFormRecyclerView extends RecyclerView {
 
         int dp = millisecond / mMScondPreDp;
 
-        // 计算应该移动多少x周的间距
+        // 计算应该移动多少x轴的间距
         mOnceOffsetx =  dp * mDensity;
 
         mLayoutManager.scrollToPositionWithOffset(0,-dp * mDensity);
@@ -277,6 +278,9 @@ public class WaveFormRecyclerView extends RecyclerView {
 
     /*画刻度线*/
     private void drawKD(Canvas c, int startx, int paddingx, int i) {
+
+        if (mMScondPreDp * i / 1000 > mMaxKDSecond)
+            return;
 
         // 设置画笔颜色
         mPaint.setColor(mDrawcolor);
