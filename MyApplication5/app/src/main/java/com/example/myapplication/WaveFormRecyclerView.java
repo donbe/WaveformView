@@ -30,7 +30,7 @@ public class WaveFormRecyclerView extends RecyclerView {
 
     private final WareFormAdapter mAdapter;
     private final WaveformViewLayout mLayoutManager;
-    public int mMaxKDSecond = 10;      // 画刻度线的最大秒数,0表示不限制
+    public int mMaxKDSecond = 60;      // 画刻度线的最大秒数,0表示不限制
     public int mMScondPreDp = 50;      // 一个dp多少毫秒,这个值必须要能被1000整除
     public int mPaddingleft = 0;                    // 刻度的起始坐标(像素)
     public int mDrawcolor = 0xff3D4057;     // 刻度颜色
