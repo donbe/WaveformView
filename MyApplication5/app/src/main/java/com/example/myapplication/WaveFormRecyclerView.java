@@ -314,6 +314,10 @@ public class WaveFormRecyclerView extends RecyclerView {
     /*画显示整10秒位置的时间文本*/
     private void drawText(Canvas c, int startx, int paddingx, int i) {
 
+        // 显示最大刻度
+        if ( mMaxKDSecond>0 && mMScondPreDp * i / 1000 > mMaxKDSecond)
+            return;
+        
         // 设置画笔颜色
         mPaint.setColor(mDrawcolor);
 
