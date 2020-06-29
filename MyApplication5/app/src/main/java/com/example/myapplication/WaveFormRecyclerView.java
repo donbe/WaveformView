@@ -199,7 +199,7 @@ public class WaveFormRecyclerView extends RecyclerView {
             mCurrentScrollOffsetx = scrollOffsetX;
 
             // 回调
-            if (listener != null ) listener.onScrolled(scrollOffsetX, (int) (Math.ceil(scrollOffsetX/3.0)* mMScondPreDp));
+            if (listener != null ) listener.onScrolled(scrollOffsetX, (int) (Math.ceil(scrollOffsetX/mDensity)* mMScondPreDp));
         }
     }
 
@@ -208,13 +208,13 @@ public class WaveFormRecyclerView extends RecyclerView {
      * */
     public int getCurrentTime(){
         int scrollOffsetX= computeHorizontalScrollOffset();
-        return (int) (Math.ceil(scrollOffsetX/3.0)* mMScondPreDp);
+        return (int) (Math.ceil(scrollOffsetX/mDensity)* mMScondPreDp);
     }
 
     /*获取指针所在位置的样本数*/
     public int getCurrentSamples(){
         int scrollOffsetX= computeHorizontalScrollOffset();
-        return (int)Math.ceil(scrollOffsetX/3.0);
+        return (int)Math.ceil(scrollOffsetX/mDensity);
     }
 
 
